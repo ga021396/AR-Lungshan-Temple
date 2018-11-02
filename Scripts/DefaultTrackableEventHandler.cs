@@ -18,7 +18,7 @@ public class DefaultTrackableEventHandler : MonoBehaviour, ITrackableEventHandle
     private GameObject videoplay;
     private GameObject videoplay2;
     private GameObject videoplay3;
-
+    bool audioToggle = true;
     #region PRIVATE_MEMBER_VARIABLES
 
     protected TrackableBehaviour mTrackableBehaviour;
@@ -34,9 +34,15 @@ public class DefaultTrackableEventHandler : MonoBehaviour, ITrackableEventHandle
         foreach (AudioSource audioS in allAudioSources)//抓陣列中的所有物件
         {
             if (audioS.isPlaying)   //如果正在播放則停止 否則播放
+            {
                 audioS.Pause();
+                audioToggle = true;
+            }
             else
+            {
                 audioS.Play();
+                audioToggle = false;
+            }
         }
     }
     public void StopAllAudio()
@@ -45,7 +51,10 @@ public class DefaultTrackableEventHandler : MonoBehaviour, ITrackableEventHandle
         foreach (AudioSource audioS in allAudioSources)
         {
             if (audioS.isPlaying)   //當播放時則停止
+            {
+                audioToggle = true;
                 audioS.Stop();
+            } 
         }
     }
     //-----------語音部分-----------
@@ -256,10 +265,29 @@ public class DefaultTrackableEventHandler : MonoBehaviour, ITrackableEventHandle
         myClip = (AudioClip)Resources.Load(aud);
         mySource.clip = myClip;
     }
+    public void initAudio() {
+        UnityEngine.UI.Slider  slider;
+        slider = GameObject.Find("Slider").GetComponent<Slider>();
+        slider.value = 1;
+    }
     public void onClick() {
         //按按鈕播/停語音
         ToggleAllAudio();
+        if (audioToggle == false)
+        {
+            changeButton("UI/pause");
+        }
+        else {
+            changeButton("UI/play 1");
+        }
        }
+    public void changeButton(string image) {
+        UnityEngine.UI.Image img;
+        Sprite Myimg;
+        img = GameObject.Find("audioIntStart").GetComponent<UnityEngine.UI.Image>();
+        Myimg = Resources.Load<Sprite>(image);
+        img.sprite = Myimg;
+    }
     public void getSource(string txt,string ima,string aud,string tit) {
         //傳參數從resource抓不同的檔案
 
